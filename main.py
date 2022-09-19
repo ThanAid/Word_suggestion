@@ -117,6 +117,8 @@ def graph_add_node(v1, v2, w):
 def graph_next_word(current_word, number_suggestions, randomness=False):
     # Creating a list to store the weights of the corresponding vertices.
     w_list = []
+    # Creating a list to store the vertices of the corresponding weights.
+    v_list = []
     # Creating a list to store suggestions and keep duplicates out.
     suggestions = []
 
@@ -124,6 +126,8 @@ def graph_next_word(current_word, number_suggestions, randomness=False):
         # Choosing only the integers so we choose the weights
         if isinstance(w, int):
             w_list.append(w)
+        else:
+            v_list.append(w)
 
     # Check if the asked number of suggestions exists and provide a message if not (also adjust the number).
     if int(number_suggestions) > int(len(w_list)):
@@ -135,26 +139,34 @@ def graph_next_word(current_word, number_suggestions, randomness=False):
         # loop for each suggestion.
     for k in range(0, number_suggestions):
 
+        # if we want the suggestions to be the most frequent following word (randomness = False)
         if not randomness:
             # find the max weight
-            max_w = max(w_list)
-        else:
-            w_list_prob = []
-            for number in w_list:
-                w_list_prob.append(number / len(w_list))  # TODO edw tha mpei to randomeness
+            chosen_w = max(w_list)
 
-        multiple_words = True
-        while multiple_words:
-            # Use the line above to get the index, or the line below to get it randomized in case of a draw(for
+            # Use the line below to get it randomized in case of a draw(for
             # example if two words have the same weight).
-            max_w_index = random.choice([i for i in range(len(word_graph[current_word]))
-                                         if word_graph[current_word][i] == max_w])
-            # store that into the list of suggestions if it hasn't been used before.
-            if word_graph[current_word][max_w_index - 1] not in suggestions:
-                suggestions.append(word_graph[current_word][max_w_index - 1])
-                # remove that value from the list of the weights, using index.
-                del w_list[w_list.index(max_w)]
-                multiple_words = False
+            chosen_w_index = random.choice([i for i in range(len(w_list))
+                                            if w_list[i] == chosen_w])
+
+        # if we want the suggestions to be the calculated via possibility (randomness = True)
+        else:
+            # Calculating total weight
+            total_weight = sum(w_list)
+            # Creating a list to store probability of each word
+            p_list = []
+            for w in w_list:
+                # Calculate the probability and add it to the p_list
+                p_list.append(w / total_weight)
+
+            chosen_w_index = v_list.index(random.choices(v_list, weights=p_list, k=1)[0])
+
+        # put the suggested word in the list suggestions
+        suggestions.append(v_list[chosen_w_index])
+
+        # remove that value from the list of the weights and vertices, using index.
+        del v_list[chosen_w_index]
+        del w_list[chosen_w_index]
 
     # return the edge with the maximum weight
     return suggestions
@@ -189,11 +201,14 @@ def starting_up():
 def main_menu():
     # printing available modes.
     print('\nThe available modes are: ')
-    print('1--Word suggestion')  # TODO names
-    print('2--Sentence suggestion')
-    print('3--Mode C')
-    print('4--Exit')
-    ans = input('Please provide the corresponding number: ')
+    print('Frequency based:')
+    print('   1--Word suggestion')
+    print('   2--Sentence suggestion')
+    print('Possibility based:')
+    print('   3--Word suggestion')
+    print('   4--Sentence suggestion')
+    print('5--Exit')
+    ans = input('\nPlease provide the corresponding number: ')
 
     # Check the answer
     while True:
@@ -223,10 +238,31 @@ def main_menu():
 
         # if answer is 3 then mode C is entered.
         elif ans == '3':
-            main_menu()
+            print('\nHow many suggestions do you want to be provided for each word?')
+            ans_c = input('Please type a number: ')
+            while not ans_c.isnumeric() or ans_c == '0':
+                ans_c = input('Please type a valid number: ')
 
-        # if answer is 4 then the program will exit.
+            # convert string to int
+            ans_c = int(ans_c)
+            # call mode_a function that makes the suggestions.
+            mode_a(ans_c, posib=True)
+            # if answer is 2 then mode B is entered.
+
+        # if answer is 3 then mode D is entered.
         elif ans == '4':
+            print('\nHow many words do you want your sentence to have?')
+            ans_d = input('Please type a number: ')
+            while not ans_d.isnumeric() or ans_d == '0':
+                ans_d = input('Please type a valid number: ')
+
+            # convert string to int
+            ans_d = int(ans_d)
+            # call mode_a function that makes the suggestions.
+            mode_b(ans_d, posib=True)
+
+        # if answer is 5 then the program will exit.
+        elif ans == '5':
             print('\nExiting...')
             sys.exit()
 
@@ -236,13 +272,13 @@ def main_menu():
             main_menu()
 
 
-# function that asks for a word and makes suggestions for following words.
+# function that asks for a word and makes suggestions for following words based on frequency.
 # takes an int as an argument that tells the number of suggestions the user wants.
-def mode_a(n_sug):
+def mode_a(n_sug, posib=False):
     while True:
         word = input('\nProvide a word or "q" to exit to the main menu: ').lower()
         if word in word_graph:
-            suggestion = graph_next_word(word, n_sug)
+            suggestion = graph_next_word(word, n_sug, posib)
             print(", ".join(suggestion))
 
         # Check if user wants to exit
@@ -257,7 +293,7 @@ def mode_a(n_sug):
 # function that asks for a word and creates a sentence using the most frequent following words.
 # Takes an int as an argument that will be the size (number of words) of the sentence.
 # n_sug is and must be by default 1.
-def mode_b(sentence_size, n_sug=1):
+def mode_b(sentence_size, n_sug=1, posib=False):
     while True:
         word = input('\nProvide a word or "q" to exit to the main menu: ').lower()
         # Create a variable (list) to store the suggested words.
@@ -268,7 +304,7 @@ def mode_b(sentence_size, n_sug=1):
             words.append(word)
             for k in range(1, sentence_size):
                 if word in word_graph:
-                    suggestion = graph_next_word(word, n_sug)
+                    suggestion = graph_next_word(word, n_sug, posib)
                     # put the suggested word to the words list
                     # (index '0' is used to pick the first and only word in the list of suggestions)
                     words.append(suggestion[0])
