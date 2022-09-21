@@ -13,7 +13,7 @@ word with the biggest frequency is chosen. Then the sentence gets printed.
 If two or more words have the same frequency one of them is chosen randomly.
 3. Word suggestion based on possibility.
 Asks for a word and the number of suggestions you want and then prints the 
-suggested words. Words are suggested based on a random choise selections that
+suggested words. Words are suggested based on a random choise selection that
 uses their possibility ratio. Possibility ratio is calculated based on how many times
 that word is found to follow the given word. For example if the word "evening" follows 
 the word "good" 4 out of 20 times the word "good" is found then the possibility ratio 
