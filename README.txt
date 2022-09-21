@@ -1,4 +1,5 @@
 .txt files must be put in the directory of the program.
+A .txt file is provided for testing purposes.
 
 available modes explained:
 1. Word suggestion based on frequency.
