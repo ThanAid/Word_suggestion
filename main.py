@@ -48,21 +48,18 @@ def pre_process_txt(text_string):
 # as values, "sorted" using the values as a key and also returns
 # a sorted list containing only the words(Because lists are sortable).
 def word_count(w_list):
-    # creating a temporary list to keep track of counted words.
-    temp_list = []
     # creating a dictionary to track the frequency of each word.
     word_freq = {}
 
     for word in w_list:
         # check if word is already counted
-        if word not in temp_list:
-            # Calculate the frequency
-            freq = w_list.count(word)
+        if word not in word_freq:
+            # if not then the current frequency is 1
+            word_freq[word] = 1
 
-            # Add this word to the temp list
-            temp_list.append(word)
-            # Add the word and its frequency in the dictionary.
-            word_freq[word] = freq
+        else:
+            # if yes then the current frequency is the old + 1
+            word_freq[word] += 1
 
     # "Sort" the dictionary using values(frequency) as key.
     word_freq_sorted = dict(sorted(word_freq.items(), key=lambda item: item[1], reverse=True))
@@ -194,7 +191,7 @@ def starting_up():
     sorted_dict, sorted_list = word_count(word_list)
     print(f'The total unique words read are {len(sorted_list)}.')
     print(f'The most used word is "{sorted_list[0]}" and is used {sorted_dict[sorted_list[0]]} times.')
-    print(f'One of the most rare words is "{sorted_list[-1]}" and is used {sorted_dict[sorted_list[-1]]} times.')
+    print(f'One of the most rare words is "{sorted_list[-1]}" and is used {sorted_dict[sorted_list[-1]]} time(s).')
     return word_list
 
 
