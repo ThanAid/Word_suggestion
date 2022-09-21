@@ -19,6 +19,6 @@ that word is found to follow the given word. For example if the word "evening" f
 the word "good" 4 out of 20 times the word "good" is found then the possibility ratio 
 of the word evening given the word good is 20 %.
 4. Sentence suggestion based on possibility.
-Asks for a word and the number words you want your sentence to have and then
+Asks for a word and the number of words you want your sentence to have and then
 for every word the procedure mentioned in the previous mode is executed with the number 
 of suggestions being 1. Then the sentence gets printed. 
