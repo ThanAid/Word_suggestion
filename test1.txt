@@ -1,4 +1,0 @@
-The protagonist of each Dark Souls game can have a varying gender, appearance, name, and starting class via character creation. 
-Players can choose between classes, including knights, barbarians, thieves, and mages. Each class has its own starting equipment and abilities that can be tailored to the player's experience and choices as they progress. 
-The player gains souls from gameplay battles which act as both experience points to level up and as currency to buy items. 
-Souls gained are usually proportional to the difficulty of fighting certain enemies; the more difficult an enemy, the more souls the player will gain.
