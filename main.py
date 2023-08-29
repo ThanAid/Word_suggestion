@@ -4,17 +4,17 @@ import glob
 import random
 import sys
 
-# Creating an empty graph to "save" words as keys and the following words as values for example
-# "Hi! My name is unknown.", in this case "My" is a word and "name" is the following one.
-# The "weight" of the following word (meaning the times that it has been detected) is also "saved" in the graph.
-# ex. word_graph = {'good': ['morning', 2, 'evening', 4]} where 2 are the times morning is used after good.
+'''Creating an empty graph to "save" words as keys and the following words as values for example
+"Hi! My name is unknown.", in this case "My" is a word and "name" is the following one.
+The "weight" of the following word (meaning the times that it has been detected) is also "saved" in the graph.
+ex. word_graph = {'good': ['morning', 2, 'evening', 4]} where 2 are the times morning is used after good.'''
 word_graph = {}
 
 
-# function to read the txt files and convert them to a list of words using the pre_process_txt function. returns a
-# list containing all the words that are read in a form that can be used (lower case letters and no punctuations),
-# also returns the number (int) of txt files read.
 def read_txt():
+    """function to read the txt files and convert them to a list of words using the pre_process_txt function. returns a
+    list containing all the words that are read in a form that can be used (lower case letters and no punctuations),
+    also returns the number (int) of txt files read."""
     # Creating a variable to keep track of the number of text files the programme has read.
     txt_number = 0
     # Creating an empty list to add the separate lists of words from each txt.
@@ -34,9 +34,9 @@ def read_txt():
     return txt_number, final_word_list
 
 
-# function to pre-process the text taking a string as an argument,
-# returns the processed text as a list of words.
 def pre_process_txt(text_string):
+    """function to pre-process the text taking a string as an argument,
+    returns the processed text as a list of words."""
     # split the string
     words_list = text_string.split()
     # Delete unnecessary characters like spaces etc.
@@ -44,10 +44,10 @@ def pre_process_txt(text_string):
     return stripped_word_list
 
 
-# function that takes a list of words as an argument and returns a dictionary with words as keys and their frequency
-# as values, "sorted" using the values as a key and also returns
-# a sorted list containing only the words(Because lists are sortable).
 def word_count(w_list):
+    """function that takes a list of words as an argument and returns a dictionary with words as keys and their frequency
+    as values, "sorted" using the values as a key and also returns
+    a sorted list containing only the words(Because lists are sortable)."""
     # creating a dictionary to track the frequency of each word.
     word_freq = {}
 
@@ -68,9 +68,9 @@ def word_count(w_list):
     return word_freq_sorted, word_list_sorted
 
 
-# function that takes a list of words as an argument and returns a graph with words as vertices and their following
-# words as edges with their corresponding frequency as weight.
 def list_to_graph(txt_list):
+    """function that takes a list of words as an argument and returns a graph with words as vertices and their following
+    words as edges with their corresponding frequency as weight."""
     for i in range(0, len(txt_list) - 1):
         v1 = txt_list[i]
         v2 = txt_list[i + 1]
@@ -80,9 +80,9 @@ def list_to_graph(txt_list):
         graph_add_node(v1, v2, w)
 
 
-# Creating a function that will add keys, values and the weight of the values to the graph
-# v1 is vertices, v2 edge and w the weight of that edge
 def graph_add_node(v1, v2, w):
+    """Creating a function that will add keys, values and the weight of the values to the graph
+    v1 is vertices, v2 edge and w the weight of that edge"""
     # Check if v1 already exists
     if v1 in word_graph:
         # check if v2 doesn't exist for that v1
@@ -105,13 +105,13 @@ def graph_add_node(v1, v2, w):
         word_graph.update(temp_dict)
 
 
-# Creating a function that will take a word and the number of the suggestions you want
-# as an argument and return the following words with the maximum likelihood
-# randomness is a boolean, if its true words are picked if they have the max frequency,
-# if false, words are picked using their frequency as a probability ratio.
-# For example,
-# if a word is found 6 times out of 10 after the current word then that word has 60 % chance of being suggested.
 def graph_next_word(current_word, number_suggestions, randomness=False):
+    """Creating a function that will take a word and the number of the suggestions you want
+    as an argument and return the following words with the maximum likelihood
+    randomness is a boolean, if its true words are picked if they have the max frequency,
+    if false, words are picked using their frequency as a probability ratio.
+    For example,
+    if a word is found 6 times out of 10 after the current word then that word has 60 % chance of being suggested."""
     # Creating a list to store the weights of the corresponding vertices.
     w_list = []
     # Creating a list to store the vertices of the corresponding weights.
@@ -169,9 +169,9 @@ def graph_next_word(current_word, number_suggestions, randomness=False):
     return suggestions
 
 
-# starting messages, reading and preprocessing the files and printing some statistics.
-# Only returns a dictionary containing words as keys and their frequency as values, its "sorted" by the values.
 def starting_up():
+    """starting messages, reading and preprocessing the files and printing some statistics.
+    Only returns a dictionary containing words as keys and their frequency as values, its "sorted" by the values."""
     print('Welcome!')
     print('Scanning ".txt" files...\n')
 
@@ -269,9 +269,9 @@ def main_menu():
             main_menu()
 
 
-# function that asks for a word and makes suggestions for following words based on frequency.
-# takes an int as an argument that tells the number of suggestions the user wants.
 def mode_a(n_sug, posib=False):
+    """function that asks for a word and makes suggestions for following words based on frequency.
+    takes an int as an argument that tells the number of suggestions the user wants."""
     while True:
         word = input('\nProvide a word or "q" to exit to the main menu: ').lower()
         if word in word_graph:
@@ -287,10 +287,10 @@ def mode_a(n_sug, posib=False):
             print('Word not found.')
 
 
-# function that asks for a word and creates a sentence using the most frequent following words.
-# Takes an int as an argument that will be the size (number of words) of the sentence.
-# n_sug is and must be by default 1.
 def mode_b(sentence_size, n_sug=1, posib=False):
+    """function that asks for a word and creates a sentence using the most frequent following words.
+    Takes an int as an argument that will be the size (number of words) of the sentence.
+    n_sug is and must be by default 1."""
     while True:
         word = input('\nProvide a word or "q" to exit to the main menu: ').lower()
         # Create a variable (list) to store the suggested words.
@@ -325,20 +325,14 @@ def mode_b(sentence_size, n_sug=1, posib=False):
             print('Word not found.')
 
 
-#####################################################################################################
-#####################################################################################################
-#####################################################################################################
-###################################### main program #################################################
-#####################################################################################################
+if __name__ == "__main__":
+    # get all the texts as a list of words.
+    final_list = starting_up()
 
+    print('\nAnalysing the data...')
+    # we need to convert the list to a graph
+    list_to_graph(final_list)
+    print('Model created.')
 
-# get all the texts as a list of words.
-final_list = starting_up()
-
-print('\nAnalysing the data...')
-# we need to convert the list to a graph
-list_to_graph(final_list)
-print('Model created.')
-
-# Calling the menu
-main_menu()
+    # Calling the menu
+    main_menu()
